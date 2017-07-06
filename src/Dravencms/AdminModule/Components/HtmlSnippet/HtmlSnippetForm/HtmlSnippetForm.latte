@@ -25,35 +25,8 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group no-margin-hr">
-                                    <label class="control-label" n:name="lead">{_"Lead"}</label>
-                                    <input type="text" n:name="lead" class="form-control">
-                                </div>
-                            </div><!-- col-sm-12 -->
-                        </div><!-- row -->
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group no-margin-hr">
-                                    <label class="control-label" n:name="subtitle">{_"Subtitle"}</label>
-                                    <input type="text" n:name="subtitle" class="form-control">
-                                </div>
-                            </div><!-- col-sm-12 -->
-                        </div><!-- row -->
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group no-margin-hr">
-                                    <label class="control-label" n:name="perex">{_"Perex"}</label>
-                                    <textarea n:name="perex" class="form-control wysiwyg"></textarea>
-                                </div>
-                            </div><!-- col-sm-12 -->
-                        </div><!-- row -->
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group no-margin-hr">
-                                    <label class="control-label" n:name="text">{_"Text"}</label>
-                                    <textarea n:name="text" class="form-control wysiwyg"></textarea>
+                                    <label class="control-label" n:name="html">{_"Html"}</label>
+                                    <textarea n:name="text" html="form-control"></textarea>
                                 </div>
                             </div><!-- col-sm-12 -->
                         </div><!-- row -->
@@ -61,7 +34,6 @@
                 {/formContainer}
             </div>
         </div>
-        {include $fileSelectorPath, filetype => Salamek\Files\Models\IFile::TYPE_IMAGE, form => $form}
 
         <div class="row">
             <div class="col-sm-6">
@@ -70,22 +42,9 @@
                     <input n:name="identifier" class="form-control">
                 </div>
             </div><!-- col-sm-6 -->
-            <div class="col-sm-6">
-                <div class="form-group no-margin-hr">
-                    <label class="control-label" n:name="position">{_"Position"}</label>
-                    <input n:name="position" class="form-control">
-                </div>
-            </div><!-- col-sm-6 -->
+
         </div><!-- row -->
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group no-margin-hr">
-                    <label class="control-label" n:name="tags">{_"Tags"}</label>
-                    <select n:name="tags" class="form-control"></select>
-                </div>
-            </div><!-- col-sm-12 -->
-        </div><!-- row -->
 
         <div class="row">
             <div class="col-sm-12">
@@ -101,15 +60,6 @@
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" n:name="isShowName" class="px"> <span class="lbl">{_"Show name"}</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" n:name="isAutoDetectTags" class="px"> <span class="lbl">{_"Autodetect tags in text"}</span>
                     </label>
                 </div>
             </div>
