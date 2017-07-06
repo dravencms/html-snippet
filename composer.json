@@ -1,0 +1,45 @@
+{
+  "name": "dravencms/article",
+  "type": "dravencms-package",
+  "description": "Article module for dravencms",
+  "keywords": [
+    "dravencms",
+    "article"
+  ],
+  "license": [
+    "LGPL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Adam Schubert"
+    }
+  ],
+  "require": {
+    "dravencms/tag": "@dev",
+    "dravencms/file": "@dev",
+    "dravencms/user": "@dev",
+    "dravencms/structure": "@dev",
+    "dravencms/paginator": "@dev"
+  },
+  "require-dev": {
+    "nette/tester": "@dev"
+  },
+  "autoload": {
+    "psr-0": {
+      "Dravencms\\": "src/"
+    }
+  },
+  "extra": {
+    "dravencms": {
+      "configuration": {
+        "extensions": {
+          "article": "Dravencms\\Article\\DI\\ArticleExtension"
+        }
+      },
+      "scripts": {
+        "post-install": "Dravencms\\Article\\Script\\PostInstall",
+        "pre-uninstall": "Dravencms\\Article\\Script\\PreUninstall"
+      }
+    }
+  }
+}
