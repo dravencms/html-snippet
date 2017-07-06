@@ -26,6 +26,7 @@ use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Locale\CurrentLocale;
 use Dravencms\Model\Article\Entities\Group;
 use Dravencms\Model\Article\Repository\ArticleRepository;
+use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository;
 use Dravencms\Model\Locale\Repository\LocaleRepository;
 use Kdyby\Doctrine\EntityManager;
 
@@ -40,33 +41,21 @@ class HtmlSnippetGrid extends BaseControl
     /** @var BaseGridFactory */
     private $baseGridFactory;
 
-    /** @var ArticleRepository */
-    private $articleRepository;
+    /** @var HtmlSnippetRepository */
+    private $htmlSnippetRepository;
 
     /** @var EntityManager */
     private $entityManager;
 
     private $currentLocale;
 
-    /** @var Group */
-    private $group;
-
     /**
      * @var array
      */
     public $onDelete = [];
 
-    /**
-     * ArticleGrid constructor.
-     * @param Group $group
-     * @param ArticleRepository $articleRepository
-     * @param BaseGridFactory $baseGridFactory
-     * @param EntityManager $entityManager
-     * @param CurrentLocale $currentLocale
-     */
     public function __construct(
-        Group $group,
-        ArticleRepository $articleRepository,
+        HtmlSnippetRepository $htmlSnippetRepository,
         BaseGridFactory $baseGridFactory,
         EntityManager $entityManager,
         CurrentLocale $currentLocale
@@ -74,31 +63,23 @@ class HtmlSnippetGrid extends BaseControl
     {
         parent::__construct();
 
-        $this->group = $group;
         $this->baseGridFactory = $baseGridFactory;
-        $this->articleRepository = $articleRepository;
+        $this->htmlSnippetRepository = $htmlSnippetRepository;
         $this->currentLocale = $currentLocale;
         $this->entityManager = $entityManager;
     }
 
-
     /**
      * @param $name
-     * @return \Dravencms\Components\BaseGrid\BaseGrid
+     * @return mixed
      */
     public function createComponentGrid($name)
     {
         $grid = $this->baseGridFactory->create($this, $name);
 
-        $grid->setModel($this->articleRepository->getArticleQueryBuilder($this->group));
+        $grid->setModel($this->htmlSnippetRepository->getArticleQueryBuilder($this->group));
 
-        if ($this->group->getSortBy() == Group::SORT_BY_POSITION) {
-            $grid->setDefaultSort(['position' => 'ASC']);
-        }
-        elseif ($this->group->getSortBy() == Group::SORT_BY_CREATED_AT)
-        {
-            $grid->setDefaultSort(['createdAt' => 'DESC']);
-        }
+        $grid->setDefaultSort(['createdAt' => 'DESC']);
 
         $grid->addColumnText('identifier', 'Identifier')
             ->setSortable()
@@ -108,31 +89,20 @@ class HtmlSnippetGrid extends BaseControl
         $grid->addColumnBoolean('isActive', 'Active');
         $grid->addColumnBoolean('isShowName', 'Show name');
 
-        if ($this->group->getSortBy() == Group::SORT_BY_POSITION)
-        {
-            $grid->addColumnNumber('position', 'Position')
-                ->setSortable()
-                ->setFilterNumber()
-                ->setSuggestion();
-            $grid->getColumn('position')->cellPrototype->class[] = 'center';
-        }
-        elseif ($this->group->getSortBy() == Group::SORT_BY_CREATED_AT)
-        {
-            $grid->addColumnDate('createdAt', 'Created', $this->currentLocale->getDateTimeFormat())
-                ->setSortable()
-                ->setFilterDate();
-            $grid->getColumn('createdAt')->cellPrototype->class[] = 'center';
-        }
+        $grid->addColumnDate('createdAt', 'Created', $this->currentLocale->getDateTimeFormat())
+            ->setSortable()
+            ->setFilterDate();
+        $grid->getColumn('createdAt')->cellPrototype->class[] = 'center';
 
-        if ($this->presenter->isAllowed('article', 'edit')) {
+        if ($this->presenter->isAllowed('htmlSnippet', 'edit')) {
             $grid->addActionHref('edit', 'Upravit')
                 ->setCustomHref(function($row){
-                    return $this->presenter->link('edit', ['id' => $row->getId(), 'groupId' => $this->group->getId()]);
+                    return $this->presenter->link('edit', ['id' => $row->getId()]);
                 })
                 ->setIcon('pencil');
         }
 
-        if ($this->presenter->isAllowed('article', 'delete')) {
+        if ($this->presenter->isAllowed('htmlSnippet', 'delete')) {
             $grid->addActionHref('delete', 'Smazat', 'delete!')
                 ->setCustomHref(function($row){
                     return $this->link('delete!', $row->getId());
@@ -172,10 +142,10 @@ class HtmlSnippetGrid extends BaseControl
      */
     public function handleDelete($id)
     {
-        $articles = $this->articleRepository->getById($id);
-        foreach ($articles AS $article)
+        $htmlSnippets = $this->htmlSnippetRepository->getById($id);
+        foreach ($htmlSnippets AS $htmlSnippet)
         {
-            $this->entityManager->remove($article);
+            $this->entityManager->remove($htmlSnippet);
         }
 
         $this->entityManager->flush();
@@ -186,7 +156,7 @@ class HtmlSnippetGrid extends BaseControl
     public function render()
     {
         $template = $this->template;
-        $template->setFile(__DIR__ . '/ArticleGrid.latte');
+        $template->setFile(__DIR__ . '/HtmlSnippetGrid.latte');
         $template->render();
     }
 }
