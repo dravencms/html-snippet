@@ -1,10 +1,10 @@
 {
-  "name": "dravencms/article",
+  "name": "dravencms/html-snippet",
   "type": "dravencms-package",
-  "description": "Article module for dravencms",
+  "description": "Html snippet module for dravencms",
   "keywords": [
     "dravencms",
-    "article"
+    "html-snippet"
   ],
   "license": [
     "LGPL-3.0"
@@ -15,11 +15,7 @@
     }
   ],
   "require": {
-    "dravencms/tag": "@dev",
-    "dravencms/file": "@dev",
-    "dravencms/user": "@dev",
-    "dravencms/structure": "@dev",
-    "dravencms/paginator": "@dev"
+    "dravencms/structure": "^1.0"
   },
   "require-dev": {
     "nette/tester": "@dev"
@@ -33,12 +29,8 @@
     "dravencms": {
       "configuration": {
         "extensions": {
-          "article": "Dravencms\\Article\\DI\\ArticleExtension"
+          "article": "Dravencms\\HtmlSnippet\\DI\\HtmlSnippetExtension"
         }
-      },
-      "scripts": {
-        "post-install": "Dravencms\\Article\\Script\\PostInstall",
-        "pre-uninstall": "Dravencms\\Article\\Script\\PreUninstall"
       }
     }
   }
