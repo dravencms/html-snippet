@@ -8,7 +8,7 @@ The best way to install dravencms/html-snippet is using  [Composer](http://getco
 
 
 ```sh
-$ composer require dravencms/html-snippet:@dev
+$ composer require dravencms/html-snippet:dev-master
 ```
 
 Then you have to register extension in `config.neon`.
