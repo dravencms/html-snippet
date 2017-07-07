@@ -21,7 +21,7 @@ class AdminMenuFixtures extends AbstractFixture implements DependentFixtureInter
     {
         $menu = $manager->getRepository(Menu::class);
 
-        $adminMenu = new Menu('HtmlSnippet', ':Admin:HtmlSnippet:HtmlSnippet', 'fa-bullhorn', $this->getReference('user-acl-operation-htmlSnippet-edit'));
+        $adminMenu = new Menu('HtmlSnippet', ':Admin:HtmlSnippet:HtmlSnippet', 'fa-code', $this->getReference('user-acl-operation-htmlSnippet-edit'));
 
         if ($parent = $menu->findOneBy(['name' => 'Site items']))
         {

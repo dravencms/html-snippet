@@ -7,75 +7,73 @@ namespace Dravencms\Model\HtmlSnippet\Repository;
 
 use Dravencms\Model\Article\Entities\Article;
 use Dravencms\Model\Article\Entities\Group;
+use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
 use Kdyby\Doctrine\EntityManager;
 use Nette;
 
 class HtmlSnippetRepository
 {
     /** @var \Kdyby\Doctrine\EntityRepository */
-    private $articleRepository;
+    private $htmlSnippetRepository;
 
     /** @var EntityManager */
     private $entityManager;
 
     /**
-     * MenuRepository constructor.
+     * HtmlSnippetRepository constructor.
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->articleRepository = $entityManager->getRepository(Article::class);
+        $this->htmlSnippetRepository = $entityManager->getRepository(HtmlSnippet::class);
     }
 
     /**
      * @param $id
-     * @return mixed|null|Article
+     * @return mixed|null|HtmlSnippet
      */
     public function getOneById($id)
     {
-        return $this->articleRepository->find($id);
+        return $this->htmlSnippetRepository->find($id);
     }
 
     /**
      * @param $id
-     * @return Article[]
+     * @return HtmlSnippet[]
      */
     public function getById($id)
     {
-        return $this->articleRepository->findBy(['id' => $id]);
+        return $this->htmlSnippetRepository->findBy(['id' => $id]);
     }
 
     /**
-     * @return Article[]
+     * @return HtmlSnippet[]
      */
     public function getActive()
     {
-        return $this->articleRepository->findBy(['isActive' => true]);
+        return $this->htmlSnippetRepository->findBy(['isActive' => true]);
     }
 
     /**
      * @param $identifier
-     * @param Group $group
-     * @param Article|null $articleIgnore
-     * @return bool
+     * @param HtmlSnippet|null $htmlSnippetIgnore
+     * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function isIdentifierFree($identifier, Group $group, Article $articleIgnore = null)
+    public function isIdentifierFree($identifier, HtmlSnippet $htmlSnippetIgnore = null)
     {
-        $qb = $this->articleRepository->createQueryBuilder('a')
-            ->select('a')
-            ->where('a.identifier = :identifier')
-            ->andWhere('a.group = :group')
+        $qb = $this->htmlSnippetRepository->createQueryBuilder('hs')
+            ->select('hs')
+            ->where('hs.identifier = :identifier')
             ->setParameters([
-                'identifier' => $identifier,
-                'group' => $group
+                'identifier' => $identifier
             ]);
 
-        if ($articleIgnore)
+        if ($htmlSnippetIgnore)
         {
-            $qb->andWhere('a != :articleIgnore')
-                ->setParameter('articleIgnore', $articleIgnore);
+            $qb->andWhere('hs != :htmlSnippetIgnore')
+                ->setParameter('htmlSnippetIgnore', $htmlSnippetIgnore);
         }
 
         $query = $qb->getQuery();
@@ -84,48 +82,13 @@ class HtmlSnippetRepository
     }
 
     /**
-     * @param Group $group
      * @return \Kdyby\Doctrine\QueryBuilder
      */
-    public function getArticleQueryBuilder(Group $group)
+    public function getHtmlSnippetQueryBuilder()
     {
-        $qb = $this->articleRepository->createQueryBuilder('a')
-            ->select('a')
-            ->where('a.group = :group')
-            ->setParameter('group', $group);
+        $qb = $this->htmlSnippetRepository->createQueryBuilder('hs')
+            ->select('hs');
         return $qb;
-    }
-
-    /**
-     * @param integer $id
-     * @param bool $isActive
-     * @return mixed|null|Article
-     */
-    public function getOneByIdAndActive($id, $isActive = true)
-    {
-        return $this->articleRepository->findOneBy(['id' => $id, 'isActive' => $isActive]);
-    }
-
-    /**
-     * @param bool $isActive
-     * @return Article[]
-     * @deprecated do filtering in Repository
-     */
-    public function getAllByActive($isActive = true)
-    {
-        return $this->articleRepository->findBy(['isActive' => $isActive]);
-    }
-
-    /**
-     * @param bool $isActive
-     * @param array $parameters
-     * @return Article
-     * @deprecated
-     */
-    public function getOneByActiveAndParameters($isActive = true, array $parameters = [])
-    {
-        $parameters['isActive'] = $isActive;
-        return $this->articleRepository->findOneBy($parameters);
     }
 
     /**
@@ -134,6 +97,6 @@ class HtmlSnippetRepository
      */
     public function getOneByParameters(array $parameters)
     {
-        return $this->articleRepository->findOneBy($parameters);
+        return $this->htmlSnippetRepository->findOneBy($parameters);
     }
 }

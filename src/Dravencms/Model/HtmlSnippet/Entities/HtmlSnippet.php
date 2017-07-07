@@ -40,8 +40,8 @@ class HtmlSnippet extends Nette\Object
     private $isShowName;
 
     /**
-     * @var ArrayCollection|ArticleTranslation[]
-     * @ORM\OneToMany(targetEntity="ArticleTranslation", mappedBy="article",cascade={"persist", "remove"})
+     * @var ArrayCollection|HtmlSnippetTranslation[]
+     * @ORM\OneToMany(targetEntity="HtmlSnippetTranslation", mappedBy="htmlSnippet",cascade={"persist", "remove"})
      */
     private $translations;
 

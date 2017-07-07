@@ -77,7 +77,7 @@ class HtmlSnippetGrid extends BaseControl
     {
         $grid = $this->baseGridFactory->create($this, $name);
 
-        $grid->setModel($this->htmlSnippetRepository->getArticleQueryBuilder($this->group));
+        $grid->setModel($this->htmlSnippetRepository->getHtmlSnippetQueryBuilder());
 
         $grid->setDefaultSort(['createdAt' => 'DESC']);
 

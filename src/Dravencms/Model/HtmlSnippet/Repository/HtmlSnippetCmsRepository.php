@@ -6,6 +6,7 @@
 namespace Dravencms\Model\HtmlSnippet\Repository;
 
 use Dravencms\Model\Article\Entities\Article;
+use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
 use Nette;
 use Salamek\Cms\CmsActionOption;
 use Salamek\Cms\ICmsActionOption;
@@ -14,11 +15,12 @@ use Salamek\Cms\Models\ILocale;
 
 class HtmlSnippetCmsRepository implements ICmsComponentRepository
 {
-    private $articleRepository;
+    /** @var HtmlSnippetRepository */
+    private $htmlSnippetRepository;
     
-    public function __construct(ArticleRepository $articleRepository)
+    public function __construct(HtmlSnippetRepository $htmlSnippetRepository)
     {
-        $this->articleRepository = $articleRepository;
+        $this->htmlSnippetRepository = $htmlSnippetRepository;
     }
 
     /**
@@ -30,18 +32,11 @@ class HtmlSnippetCmsRepository implements ICmsComponentRepository
         switch ($componentAction)
         {
             case 'Detail':
-            case 'OverviewDetail':
                 $return = [];
-                /** @var Article $article */
-                foreach ($this->articleRepository->getActive() AS $article) {
+                /** @var HtmlSnippet $article */
+                foreach ($this->htmlSnippetRepository->getActive() AS $article) {
                     $return[] = new CmsActionOption($article->getIdentifier(), ['id' => $article->getId()]);
                 }
-                break;
-
-            case 'Overview':
-            case 'SimpleOverview':
-            case 'Navigation':
-                return null;
                 break;
 
             default:
@@ -61,11 +56,11 @@ class HtmlSnippetCmsRepository implements ICmsComponentRepository
     public function getActionOption($componentAction, array $parameters)
     {
         /** @var Article $found */
-        $found = $this->articleRepository->getOneByParameters($parameters + ['isActive' => true]);
+        $found = $this->htmlSnippetRepository->getOneByParameters($parameters + ['isActive' => true]);
         
         if ($found)
         {
-            return new CmsActionOption(($found->getLead() ? $found->getLead() . ' ' : '') . $found->getIdentifier(), $parameters);
+            return new CmsActionOption($found->getIdentifier(), $parameters);
         }
 
         return null;
