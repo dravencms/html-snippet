@@ -1,21 +1,13 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Dravencms\AdminModule\HtmlSnippetModule;
 
-use Dravencms\AdminModule\Components\Article\ArticleForm\ArticleFormFactory;
-use Dravencms\AdminModule\Components\Article\ArticleGrid\ArticleGridFactory;
+use Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetForm\HtmlSnippetFormFactory;
+use Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetGrid\HtmlSnippetGridFactory;
 use Dravencms\AdminModule\SecuredPresenter;
 use Dravencms\Flash;
-use Dravencms\Model\Article\Entities\Article;
-use Dravencms\Model\Article\Entities\Group;
-use Dravencms\Model\Article\Repository\ArticleRepository;
-use Dravencms\Model\Article\Repository\GroupRepository;
-use Dravencms\Model\Tag\Repository\TagRepository;
+use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
+use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository;
 
 /**
  * Description of HtmlSnippetPresenter
@@ -25,85 +17,70 @@ use Dravencms\Model\Tag\Repository\TagRepository;
 class HtmlSnippetPresenter extends SecuredPresenter
 {
 
-    /** @var ArticleRepository @inject */
-    public $articleRepository;
+    /** @var HtmlSnippetRepository @inject */
+    public $htmlSnippetRepository;
 
-    /** @var GroupRepository @inject */
-    public $groupRepository;
+    /** @var HtmlSnippetGridFactory @inject */
+    public $htmlSnippetGridFactory;
 
-    /** @var TagRepository @inject */
-    public $tagRepository;
+    /** @var HtmlSnippetFormFactory @inject */
+    public $htmlSnippetFormFactory;
 
-    /** @var ArticleGridFactory @inject */
-    public $articleGridFactory;
-
-    /** @var ArticleFormFactory @inject */
-    public $articleFormFactory;
-
-    /** @var Group */
-    private $group;
-
-    /** @var Article|null */
-    private $article = null;
+    /** @var HtmlSnippet|null */
+    private $htmlSnippet = null;
 
     /**
-     * @param integer $groupId
-     * @isAllowed(article,edit)
+     * @isAllowed(htmlSnippet,edit)
      */
-    public function actionDefault($groupId)
+    public function actionDefault()
     {
-        $this->group = $this->groupRepository->getOneById($groupId);
-        $this->template->group = $this->group;
-        $this->template->h1 = 'Articles in group '.$this->group->getIdentifier();
+        $this->template->h1 = 'Html snippets';
     }
 
     /**
-     * @isAllowed(article,edit)
-     * @param $groupId
+     * @isAllowed(htmlSnippet,edit)
      * @param $id
-     * @throws \Nette\Application\BadRequestException
      */
-    public function actionEdit($groupId, $id = null)
+    public function actionEdit($id = null)
     {
-        $this->group = $this->groupRepository->getOneById($groupId);
         if ($id) {
-            $article = $this->articleRepository->getOneById($id);
+            $htmlSnippet = $this->htmlSnippetRepository->getOneById($id);
 
-            if (!$article) {
+            if (!$htmlSnippet) {
                 $this->error();
             }
 
-            $this->article = $article;
+            $this->htmlSnippet = $htmlSnippet;
 
-            $this->template->h1 = sprintf('Edit article „%s“', $article->getIdentifier());
+            $this->template->h1 = sprintf('Edit html snippet „%s“', $htmlSnippet->getIdentifier());
         } else {
-            $this->template->h1 = 'New article in group '.$this->group->getIdentifier();
+            $this->template->h1 = 'New html snippet';
         }
     }
 
     /**
-     * @return \Dravencms\AdminModule\Components\Article\ArticleForm\ArticleForm
+     * @return \Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetForm\HtmlSnippetForm
      */
-    protected function createComponentFormArticle()
+    protected function createComponentHtmlSnippetForm()
     {
-        $control = $this->articleFormFactory->create($this->group, $this->article);
+        $control = $this->htmlSnippetFormFactory->create($this->htmlSnippet);
         $control->onSuccess[] = function(){
-            $this->flashMessage('Article has been successfully saved', Flash::SUCCESS);
-            $this->redirect('Article:', ['groupId' => $this->group->getId()]);
+            $this->flashMessage('Html snippet has been successfully saved', Flash::SUCCESS);
+            $this->redirect('HtmlSnippet:');
         };
         return $control;
     }
 
     /**
-     * @return \Dravencms\AdminModule\Components\Article\ArticleGrid\ArticleGrid
+     * @return \Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetGrid\HtmlSnippetGrid
      */
-    public function createComponentGridArticle()
+    public function createComponentHtmlSnippetGrid()
     {
-        $control = $this->articleGridFactory->create($this->group);
+        $control = $this->htmlSnippetGridFactory->create();
         $control->onDelete[] = function()
         {
-            $this->flashMessage('Article has been successfully deleted', Flash::SUCCESS);
-            $this->redirect('Article:', ['groupId' => $this->group->getId()]);
+            $this->flashMessage('Html snippet has been successfully deleted', Flash::SUCCESS);
+            $this->redirect('HtmlSnippet:');
         };
         return $control;
     }

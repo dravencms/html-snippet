@@ -1,6 +1,6 @@
 {block #content}
-    <p n:isAllowed="article, edit">
-        <a n:href="Article:edit, groupId => $group->getId()" class="btn btn-primary"><i class="fa fa-plus"></i> {_"New article"}</a>
+    <p n:isAllowed="htmlSnippet, edit">
+        <a n:href="HtmlSnippet:edit" class="btn btn-primary"><i class="fa fa-plus"></i> {_"New html snippet"}</a>
     </p>
-    {control gridArticle}
+    {control htmlSnippetGrid}
 {/block}

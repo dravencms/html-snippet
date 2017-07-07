@@ -41,12 +41,8 @@ class Detail extends BaseControl
         $template = $this->template;
         $htmlSnippet = $this->htmlSnippetRepository->getOneByIdAndActive($this->cmsActionOption->getParameter('id'));
 
-        if (!$htmlSnippet) {
-            throw new \Nette\Application\BadRequestException(sprintf('Article %s not found', $this->cmsActionOption->getParameter('id')));
-        }
-
         $template->htmlSnippet = $htmlSnippet;
-        $template->articleTranslation = $this->htmlSnippetTranslationRepository->getTranslation($htmlSnippet, $this->currentLocale);
+        $template->htmlSnippetTranslation = $this->htmlSnippetTranslationRepository->getTranslation($htmlSnippet, $this->currentLocale);
         $template->setFile($this->cmsActionOption->getTemplatePath(__DIR__ . '/detail.latte'));
         $template->render();
     }
