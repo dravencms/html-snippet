@@ -1,19 +1,19 @@
-# Dravencms article module
+# Dravencms html snippet module
 
-This is a simple article module for dravencms
+This is a simple html snippet module for dravencms
 
 ## Instalation
 
-The best way to install dravencms/article is using  [Composer](http://getcomposer.org/):
+The best way to install dravencms/html-snippet is using  [Composer](http://getcomposer.org/):
 
 
 ```sh
-$ composer require dravencms/article:@dev
+$ composer require dravencms/html-snippet:@dev
 ```
 
 Then you have to register extension in `config.neon`.
 
 ```yaml
 extensions:
-	article: Dravencms\Article\DI\ArticleExtension
+    htmlSnippet: Dravencms\HtmlSnippet\DI\HtmlSnippetExtension
 ```
