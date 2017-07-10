@@ -40,9 +40,12 @@ class Detail extends BaseControl
     {
         $template = $this->template;
         $htmlSnippet = $this->htmlSnippetRepository->getOneByIdAndActive($this->cmsActionOption->getParameter('id'));
+        $htmlSnippetTranslation = $this->htmlSnippetTranslationRepository->getTranslation($htmlSnippet, $this->currentLocale);
 
         $template->htmlSnippet = $htmlSnippet;
-        $template->htmlSnippetTranslation = $this->htmlSnippetTranslationRepository->getTranslation($htmlSnippet, $this->currentLocale);
+        $template->htmlSnippetTranslation = $htmlSnippetTranslation;
+        $template->html = strtr($htmlSnippetTranslation->getHtml(), ['{$basePath}' => $template->basePath]);
+
         $template->setFile($this->cmsActionOption->getTemplatePath(__DIR__ . '/detail.latte'));
         $template->render();
     }

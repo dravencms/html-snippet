@@ -92,6 +92,15 @@ class HtmlSnippetRepository
     }
 
     /**
+     * @param $id
+     * @return null|HtmlSnippet
+     */
+    public function getOneByIdAndActive($id)
+    {
+        return $this->htmlSnippetRepository->findOneBy(['id' => $id, 'isActive' => true]);
+    }
+
+    /**
      * @param array $parameters
      * @return Article
      */

@@ -44,6 +44,7 @@ class HtmlSnippetTranslationRepository
     {
         $qb = $this->htmlSnippetTranslationRepository->createQueryBuilder('hst')
             ->select('hst')
+            ->join('hst.htmlSnippet', 'hs')
             ->where('hst.name = :name')
             ->andWhere('hst.locale = :locale')
             ->setParameters([
@@ -53,7 +54,7 @@ class HtmlSnippetTranslationRepository
 
         if ($htmlSnippetIgnore)
         {
-            $qb->andWhere('hst != :htmlSnippetIgnore')
+            $qb->andWhere('hs != :htmlSnippetIgnore')
                 ->setParameter('htmlSnippetIgnore', $htmlSnippetIgnore);
         }
 

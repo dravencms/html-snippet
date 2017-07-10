@@ -80,7 +80,6 @@ class HtmlSnippetForm extends BaseControl
         $this->localeRepository = $localeRepository;
 
         if ($this->htmlSnippet) {
-
             $defaults = [
                 'identifier' => $this->htmlSnippet->getIdentifier(),
                 'isActive' => $this->htmlSnippet->isActive(),
@@ -95,7 +94,7 @@ class HtmlSnippetForm extends BaseControl
         } else {
             $defaults = [
                 'isActive' => true,
-                'isShowName' => true
+                'isShowName' => false
             ];
         }
 
@@ -187,7 +186,6 @@ class HtmlSnippetForm extends BaseControl
     public function render()
     {
         $template = $this->template;
-        $template->fileSelectorPath = $this->file->getFileSelectorPath();
         $template->activeLocales = $this->localeRepository->getActive();
         $template->setFile(__DIR__ . '/HtmlSnippetForm.latte');
         $template->render();
