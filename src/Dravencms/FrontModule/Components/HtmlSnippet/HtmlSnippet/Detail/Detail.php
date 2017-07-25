@@ -6,6 +6,8 @@ use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Locale\CurrentLocale;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetTranslationRepository;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
 use Salamek\Cms\ICmsActionOption;
 
 class Detail extends BaseControl
@@ -22,11 +24,15 @@ class Detail extends BaseControl
     /** @var HtmlSnippetTranslationRepository */
     private $htmlSnippetTranslationRepository;
 
+    /** @var Cache */
+    private $cache;
+
     public function __construct(
         ICmsActionOption $cmsActionOption,
         HtmlSnippetRepository $htmlSnippetRepository,
         HtmlSnippetTranslationRepository $htmlSnippetTranslationRepository,
-        CurrentLocale $currentLocale
+        CurrentLocale $currentLocale,
+        IStorage $storage
     )
     {
         parent::__construct();
@@ -34,6 +40,7 @@ class Detail extends BaseControl
         $this->htmlSnippetRepository = $htmlSnippetRepository;
         $this->htmlSnippetTranslationRepository = $htmlSnippetTranslationRepository;
         $this->currentLocale = $currentLocale;
+        $this->cache = new Cache($storage, __CLASS__);
     }
     
     public function render()
@@ -44,9 +51,23 @@ class Detail extends BaseControl
 
         $template->htmlSnippet = $htmlSnippet;
         $template->htmlSnippetTranslation = $htmlSnippetTranslation;
-        $template->html = strtr($htmlSnippetTranslation->getHtml(), ['{$basePath}' => $template->basePath]);
 
-        $template->setFile($this->cmsActionOption->getTemplatePath(__DIR__ . '/detail.latte'));
+        $tempFile = tempnam(sys_get_temp_dir(), __CLASS__.$htmlSnippetTranslation->getId());
+        
+        $updateDate = $this->cache->load($tempFile);
+
+        if ($updateDate === null || $updateDate != $htmlSnippetTranslation->getUpdatedAt())
+        {
+            $this->cache->save($tempFile, $htmlSnippetTranslation->getUpdatedAt());
+
+            $temp = file_get_contents(__DIR__ . '/detail.latte');
+
+            $temp = strtr($temp, ['<!--HTML-SNIPPET-->' => $htmlSnippetTranslation->getHtml()]);
+
+            file_put_contents($tempFile, $temp);
+        }
+        
+        $template->setFile($tempFile);
         $template->render();
     }
 }

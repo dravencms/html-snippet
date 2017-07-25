@@ -65,7 +65,7 @@ class HtmlSnippetTranslationRepository
     /**
      * @param HtmlSnippet $htmlSnippet
      * @param ILocale $locale
-     * @return mixed|null|object
+     * @return null|HtmlSnippetTranslation
      */
     public function getTranslation(HtmlSnippet $htmlSnippet, ILocale $locale)
     {
