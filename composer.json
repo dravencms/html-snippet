@@ -30,7 +30,7 @@
     "dravencms": {
       "configuration": {
         "extensions": {
-          "article": "Dravencms\\HtmlSnippet\\DI\\HtmlSnippetExtension"
+          "htmlSnippet": "Dravencms\\HtmlSnippet\\DI\\HtmlSnippetExtension"
         }
       }
     }
