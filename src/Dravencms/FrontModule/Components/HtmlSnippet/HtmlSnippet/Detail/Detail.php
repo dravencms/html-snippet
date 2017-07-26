@@ -48,7 +48,7 @@ class Detail extends BaseControl
         $this->tempnam = $tempnam;
         $this->cache = new Cache($storage, __CLASS__);
     }
-    
+
     public function render()
     {
         $template = $this->template;
@@ -58,13 +58,11 @@ class Detail extends BaseControl
         $template->htmlSnippet = $htmlSnippet;
         $template->htmlSnippetTranslation = $htmlSnippetTranslation;
 
-        $key = __CLASS__.$htmlSnippetTranslation->getId();
+        $key = __CLASS__ . $htmlSnippetTranslation->getId();
 
         $tempFile = $this->tempnam->load($key, $htmlSnippetTranslation->getUpdatedAt());
 
-
-        if ($tempFile === null)
-        {
+        if ($tempFile === null) {
             $temp = file_get_contents(__DIR__ . '/detail.latte');
 
             $temp = strtr($temp, ['<!--HTML-SNIPPET-->' => $htmlSnippetTranslation->getHtml()]);
