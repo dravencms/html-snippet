@@ -9,6 +9,7 @@ use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetTranslationRepository;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Salamek\Cms\ICmsActionOption;
+use Salamek\Tempnam\Tempnam;
 
 class Detail extends BaseControl
 {
@@ -27,12 +28,16 @@ class Detail extends BaseControl
     /** @var Cache */
     private $cache;
 
+    /** @var Tempnam */
+    private $tempnam;
+
     public function __construct(
         ICmsActionOption $cmsActionOption,
         HtmlSnippetRepository $htmlSnippetRepository,
         HtmlSnippetTranslationRepository $htmlSnippetTranslationRepository,
         CurrentLocale $currentLocale,
-        IStorage $storage
+        IStorage $storage,
+        Tempnam $tempnam
     )
     {
         parent::__construct();
@@ -40,6 +45,7 @@ class Detail extends BaseControl
         $this->htmlSnippetRepository = $htmlSnippetRepository;
         $this->htmlSnippetTranslationRepository = $htmlSnippetTranslationRepository;
         $this->currentLocale = $currentLocale;
+        $this->tempnam = $tempnam;
         $this->cache = new Cache($storage, __CLASS__);
     }
     
@@ -52,21 +58,19 @@ class Detail extends BaseControl
         $template->htmlSnippet = $htmlSnippet;
         $template->htmlSnippetTranslation = $htmlSnippetTranslation;
 
-        $tempFile = tempnam(sys_get_temp_dir(), __CLASS__.$htmlSnippetTranslation->getId());
-        
-        $updateDate = $this->cache->load($tempFile);
+        $key = __CLASS__.$htmlSnippetTranslation->getId();
 
-        if ($updateDate === null || $updateDate != $htmlSnippetTranslation->getUpdatedAt())
+        $tempFile = $this->tempnam->load($key, $htmlSnippetTranslation->getUpdatedAt());
+
+
+        if ($tempFile === null)
         {
-            $this->cache->save($tempFile, $htmlSnippetTranslation->getUpdatedAt());
-
             $temp = file_get_contents(__DIR__ . '/detail.latte');
 
             $temp = strtr($temp, ['<!--HTML-SNIPPET-->' => $htmlSnippetTranslation->getHtml()]);
-
-            file_put_contents($tempFile, $temp);
+            $tempFile = $this->tempnam->save($key, $temp, $htmlSnippetTranslation->getUpdatedAt());
         }
-        
+
         $template->setFile($tempFile);
         $template->render();
     }

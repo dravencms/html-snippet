@@ -15,7 +15,8 @@
     }
   ],
   "require": {
-    "dravencms/structure": "^1.0"
+    "dravencms/structure": "^1.0",
+    "dravencms/tempnam": "^1.0"
   },
   "require-dev": {
     "nette/tester": "@dev"
