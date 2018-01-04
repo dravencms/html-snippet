@@ -5,8 +5,6 @@
 
 namespace Dravencms\Model\HtmlSnippet\Repository;
 
-use Dravencms\Model\Article\Entities\Article;
-use Dravencms\Model\Article\Entities\Group;
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
 use Kdyby\Doctrine\EntityManager;
 use Nette;
@@ -102,7 +100,7 @@ class HtmlSnippetRepository
 
     /**
      * @param array $parameters
-     * @return Article
+     * @return HtmlSnippet
      */
     public function getOneByParameters(array $parameters)
     {

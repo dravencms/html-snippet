@@ -23,11 +23,8 @@ namespace Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetGrid;
 
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
-use Dravencms\Locale\CurrentLocale;
-use Dravencms\Model\Article\Entities\Group;
-use Dravencms\Model\Article\Repository\ArticleRepository;
+use Dravencms\Locale\CurrentLocaleResolver;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository;
-use Dravencms\Model\Locale\Repository\LocaleRepository;
 use Kdyby\Doctrine\EntityManager;
 
 /**
@@ -47,6 +44,7 @@ class HtmlSnippetGrid extends BaseControl
     /** @var EntityManager */
     private $entityManager;
 
+    /** @var ILocale */
     private $currentLocale;
 
     /**
@@ -58,14 +56,14 @@ class HtmlSnippetGrid extends BaseControl
         HtmlSnippetRepository $htmlSnippetRepository,
         BaseGridFactory $baseGridFactory,
         EntityManager $entityManager,
-        CurrentLocale $currentLocale
+        CurrentLocaleResolver $currentLocaleResolver
     )
     {
         parent::__construct();
 
         $this->baseGridFactory = $baseGridFactory;
         $this->htmlSnippetRepository = $htmlSnippetRepository;
-        $this->currentLocale = $currentLocale;
+        $this->currentLocale = $currentLocaleResolver->getCurrentLocale();
         $this->entityManager = $entityManager;
     }
 

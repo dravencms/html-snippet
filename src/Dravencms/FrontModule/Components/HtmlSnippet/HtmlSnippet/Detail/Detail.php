@@ -3,7 +3,7 @@
 namespace Dravencms\FrontModule\Components\HtmlSnippet\HtmlSnippet\Detail;
 
 use Dravencms\Components\BaseControl\BaseControl;
-use Dravencms\Locale\CurrentLocale;
+use Dravencms\Locale\CurrentLocaleResolver;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetTranslationRepository;
 use Nette\Caching\Cache;
@@ -19,7 +19,7 @@ class Detail extends BaseControl
     /** @var ICmsActionOption */
     private $cmsActionOption;
 
-    /** @var CurrentLocale */
+    /** @var ILocale */
     private $currentLocale;
 
     /** @var HtmlSnippetTranslationRepository */
@@ -31,11 +31,20 @@ class Detail extends BaseControl
     /** @var Tempnam */
     private $tempnam;
 
+    /**
+     * Detail constructor.
+     * @param ICmsActionOption $cmsActionOption
+     * @param HtmlSnippetRepository $htmlSnippetRepository
+     * @param HtmlSnippetTranslationRepository $htmlSnippetTranslationRepository
+     * @param CurrentLocaleResolver $currentLocaleResolver
+     * @param IStorage $storage
+     * @param Tempnam $tempnam
+     */
     public function __construct(
         ICmsActionOption $cmsActionOption,
         HtmlSnippetRepository $htmlSnippetRepository,
         HtmlSnippetTranslationRepository $htmlSnippetTranslationRepository,
-        CurrentLocale $currentLocale,
+        CurrentLocaleResolver $currentLocaleResolver,
         IStorage $storage,
         Tempnam $tempnam
     )
@@ -44,7 +53,7 @@ class Detail extends BaseControl
         $this->cmsActionOption = $cmsActionOption;
         $this->htmlSnippetRepository = $htmlSnippetRepository;
         $this->htmlSnippetTranslationRepository = $htmlSnippetTranslationRepository;
-        $this->currentLocale = $currentLocale;
+        $this->currentLocale = $currentLocaleResolver->getCurrentLocale();
         $this->tempnam = $tempnam;
         $this->cache = new Cache($storage, __CLASS__);
     }

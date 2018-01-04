@@ -5,7 +5,6 @@
 
 namespace Dravencms\Model\HtmlSnippet\Repository;
 
-use Dravencms\Model\Article\Entities\Article;
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
 use Nette;
 use Salamek\Cms\CmsActionOption;
@@ -33,9 +32,9 @@ class HtmlSnippetCmsRepository implements ICmsComponentRepository
         {
             case 'Detail':
                 $return = [];
-                /** @var HtmlSnippet $article */
-                foreach ($this->htmlSnippetRepository->getActive() AS $article) {
-                    $return[] = new CmsActionOption($article->getIdentifier(), ['id' => $article->getId()]);
+                /** @var HtmlSnippet $htmlSnippet */
+                foreach ($this->htmlSnippetRepository->getActive() AS $htmlSnippet) {
+                    $return[] = new CmsActionOption($htmlSnippet->getIdentifier(), ['id' => $htmlSnippet->getId()]);
                 }
                 break;
 
@@ -55,7 +54,7 @@ class HtmlSnippetCmsRepository implements ICmsComponentRepository
      */
     public function getActionOption($componentAction, array $parameters)
     {
-        /** @var Article $found */
+        /** @var HtmlSnippet $found */
         $found = $this->htmlSnippetRepository->getOneByParameters($parameters + ['isActive' => true]);
         
         if ($found)

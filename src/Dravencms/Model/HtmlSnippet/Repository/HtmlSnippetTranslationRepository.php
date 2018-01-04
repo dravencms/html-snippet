@@ -5,14 +5,10 @@
 
 namespace Dravencms\Model\HtmlSnippet\Repository;
 
-use Dravencms\Model\Article\Entities\Article;
-use Dravencms\Model\Article\Entities\ArticleTranslation;
-use Dravencms\Model\Article\Entities\Group;
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippetTranslation;
 use Kdyby\Doctrine\EntityManager;
 use Nette;
-use Gedmo\Translatable\TranslatableListener;
 use Dravencms\Model\Locale\Entities\ILocale;
 
 class HtmlSnippetTranslationRepository
