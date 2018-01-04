@@ -14,8 +14,9 @@ use Nette;
  * @ORM\Entity
  * @ORM\Table(name="htmlSnippetHtmlSnippetTranslation")
  */
-class HtmlSnippetTranslation extends Nette\Object
+class HtmlSnippetTranslation
 {
+    use Nette\SmartObject;
     use Identifier;
     use TimestampableEntity;
 

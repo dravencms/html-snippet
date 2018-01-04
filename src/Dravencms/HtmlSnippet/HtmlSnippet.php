@@ -2,13 +2,15 @@
 
 namespace Dravencms\HtmlSnippet;
 
+use Nette\SmartObject;
 
 /**
  * Class HtmlSnippet
  * @package Dravencms\HtmlSnippet
  */
-class HtmlSnippet extends \Nette\Object
+class HtmlSnippet
 {
+    use SmartObject;
 
     public function __construct()
     {

@@ -16,8 +16,9 @@ use Nette;
  * @ORM\Entity
  * @ORM\Table(name="htmlSnippetHtmlSnippet")
  */
-class HtmlSnippet extends Nette\Object
+class HtmlSnippet
 {
+    use Nette\SmartObject;
     use Identifier;
     use TimestampableEntity;
 
