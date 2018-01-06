@@ -23,6 +23,7 @@ namespace Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetGrid;
 
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
+use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Locale\CurrentLocaleResolver;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository;
 use Kdyby\Doctrine\EntityManager;
@@ -73,70 +74,66 @@ class HtmlSnippetGrid extends BaseControl
      */
     public function createComponentGrid($name)
     {
+        /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
 
-        $grid->setModel($this->htmlSnippetRepository->getHtmlSnippetQueryBuilder());
+        $grid->setDataSource($this->htmlSnippetRepository->getHtmlSnippetQueryBuilder());
 
         $grid->setDefaultSort(['createdAt' => 'DESC']);
 
         $grid->addColumnText('identifier', 'Identifier')
             ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
+            ->setFilterText();
 
         $grid->addColumnBoolean('isActive', 'Active');
         $grid->addColumnBoolean('isShowName', 'Show name');
 
-        $grid->addColumnDate('createdAt', 'Created', $this->currentLocale->getDateTimeFormat())
+        $grid->addColumnDateTime('createdAt', 'Created')
+            ->setFormat($this->currentLocale->getDateTimeFormat())
+            ->setAlign('center')
             ->setSortable()
             ->setFilterDate();
-        $grid->getColumn('createdAt')->cellPrototype->class[] = 'center';
 
-        if ($this->presenter->isAllowed('htmlSnippet', 'edit')) {
-            $grid->addActionHref('edit', 'Upravit')
-                ->setCustomHref(function($row){
-                    return $this->presenter->link('edit', ['id' => $row->getId()]);
-                })
-                ->setIcon('pencil');
+        if ($this->presenter->isAllowed('htmlSnippet', 'edit'))
+        {
+            $grid->addAction('edit', '')
+                ->setIcon('pencil')
+                ->setTitle('Upravit')
+                ->setClass('btn btn-xs btn-primary');
         }
 
-        if ($this->presenter->isAllowed('htmlSnippet', 'delete')) {
-            $grid->addActionHref('delete', 'Smazat', 'delete!')
-                ->setCustomHref(function($row){
-                    return $this->link('delete!', $row->getId());
-                })
-                ->setIcon('trash-o')
-                ->setConfirm(function ($row) {
-                    return ['Opravdu chcete smazat article %s ?', $row->getIdentifier()];
-                });
+        if ($this->presenter->isAllowed('htmlSnippet', 'delete'))
+        {
+            $grid->addAction('delete', '', 'delete!')
+                ->setIcon('trash')
+                ->setTitle('Smazat')
+                ->setClass('btn btn-xs btn-danger ajax')
+                ->setConfirm('Do you really want to delete row %s?', 'identifier');
 
-
-            $operations = ['delete' => 'Smazat'];
-            $grid->setOperation($operations, [$this, 'gridOperationsHandler'])
-                ->setConfirm('delete', 'Opravu chcete smazat %i articles ?');
+            $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }
-        $grid->setExport();
+
+        $grid->addExportCsvFiltered('Csv export (filtered)', 'acl_resource_filtered.csv')
+            ->setTitle('Csv export (filtered)');
+
+        $grid->addExportCsv('Csv export', 'acl_resource_all.csv')
+            ->setTitle('Csv export');
 
         return $grid;
     }
 
     /**
-     * @param $action
-     * @param $ids
+     * @param array $ids
      */
-    public function gridOperationsHandler($action, $ids)
+    public function gridGroupActionDelete(array $ids)
     {
-        switch ($action)
-        {
-            case 'delete':
-                $this->handleDelete($ids);
-                break;
-        }
+        $this->handleDelete($ids);
     }
 
     /**
      * @param $id
      * @throws \Exception
+     * @isAllowed(htmlSnippet, delete)
      */
     public function handleDelete($id)
     {
