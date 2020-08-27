@@ -70,15 +70,20 @@ class Detail extends BaseControl
         $key = __CLASS__ . $htmlSnippetTranslation->getId();
 
         $tempFile = $this->tempnam->load($key, $htmlSnippetTranslation->getUpdatedAt());
-
+        $invalidateLatteCache = false;   
         if ($tempFile === null) {
             $temp = file_get_contents(__DIR__ . '/detail.latte');
 
             $temp = strtr($temp, ['<!--HTML-SNIPPET-->' => $htmlSnippetTranslation->getHtml()]);
             $tempFile = $this->tempnam->save($key, $temp, $htmlSnippetTranslation->getUpdatedAt());
+            $invalidateLatteCache = true;
         }
 
         $template->setFile($tempFile);
+        if ($invalidateLatteCache) {
+            $latteTmpFile = $template->getLatte()->getCacheFile($template->getFile());
+            if (is_file($latteTmpFile)) unlink($latteTmpFile);
+        }
         $template->render();
     }
 }
