@@ -15,7 +15,6 @@
     }
   ],
   "require": {
-    "dravencms/structure": "^1.0",
     "dravencms/tempnam": "^1.0"
   },
   "suggest": {
