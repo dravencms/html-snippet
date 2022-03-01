@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -6,11 +6,10 @@
 namespace Dravencms\Model\HtmlSnippet\Repository;
 
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
-use Nette;
 use Salamek\Cms\CmsActionOption;
 use Salamek\Cms\ICmsActionOption;
 use Salamek\Cms\ICmsComponentRepository;
-use Salamek\Cms\Models\ILocale;
+
 
 class HtmlSnippetCmsRepository implements ICmsComponentRepository
 {
@@ -26,7 +25,7 @@ class HtmlSnippetCmsRepository implements ICmsComponentRepository
      * @param string $componentAction
      * @return ICmsActionOption[]
      */
-    public function getActionOptions($componentAction)
+    public function getActionOptions(string $componentAction)
     {
         switch ($componentAction)
         {
@@ -52,7 +51,7 @@ class HtmlSnippetCmsRepository implements ICmsComponentRepository
      * @param array $parameters
      * @return null|CmsActionOption
      */
-    public function getActionOption($componentAction, array $parameters)
+    public function getActionOption(string $componentAction, array $parameters)
     {
         /** @var HtmlSnippet $found */
         $found = $this->htmlSnippetRepository->getOneByParameters($parameters + ['isActive' => true]);

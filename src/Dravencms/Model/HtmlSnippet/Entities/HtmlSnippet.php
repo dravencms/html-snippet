@@ -1,13 +1,11 @@
-<?php
+<?php declare(strict_types = 1);
 namespace Dravencms\Model\HtmlSnippet\Entities;
 
-use Dravencms\Model\File\Entities\StructureFile;
-use Dravencms\Model\Tag\Entities\Tag;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Dravencms\Database\Attributes\Identifier;
 use Nette;
 
 /**
@@ -52,7 +50,7 @@ class HtmlSnippet
      * @param bool $isActive
      * @param bool $isShowTitle
      */
-    public function __construct($identifier, $isActive = true, $isShowTitle = true)
+    public function __construct(string $identifier, bool $isActive = true, bool $isShowTitle = true)
     {
         $this->identifier = $identifier;
         $this->isActive = $isActive;
@@ -63,7 +61,7 @@ class HtmlSnippet
     /**
      * @param boolean $isActive
      */
-    public function setIsActive($isActive)
+    public function setIsActive(bool $isActive): void
     {
         $this->isActive = $isActive;
     }
@@ -71,7 +69,7 @@ class HtmlSnippet
     /**
      * @param boolean $isShowName
      */
-    public function setIsShowName($isShowName)
+    public function setIsShowName(bool $isShowName): void
     {
         $this->isShowName = $isShowName;
     }
@@ -80,7 +78,7 @@ class HtmlSnippet
     /**
      * @param string $identifier
      */
-    public function setIdentifier($identifier)
+    public function setIdentifier(string $identifier): void
     {
         $this->identifier = $identifier;
     }
@@ -88,7 +86,7 @@ class HtmlSnippet
     /**
      * @return boolean
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->isActive;
     }
@@ -96,7 +94,7 @@ class HtmlSnippet
     /**
      * @return boolean
      */
-    public function isShowName()
+    public function isShowName(): bool
     {
         return $this->isShowName;
     }
@@ -112,7 +110,7 @@ class HtmlSnippet
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }

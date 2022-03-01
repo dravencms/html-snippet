@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types = 1);
 namespace Dravencms\Model\HtmlSnippet\Entities;
 
 use Dravencms\Model\Locale\Entities\Locale;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Dravencms\Database\Attributes\Identifier;
 use Nette;
 
 /**
@@ -53,7 +53,7 @@ class HtmlSnippetTranslation
      * @param $name
      * @param $html
      */
-    public function __construct(HtmlSnippet $htmlSnippet, Locale $locale, $name, $html)
+    public function __construct(HtmlSnippet $htmlSnippet, Locale $locale, string $name, string $html)
     {
         $this->name = $name;
         $this->html = $html;
@@ -64,7 +64,7 @@ class HtmlSnippetTranslation
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -72,7 +72,7 @@ class HtmlSnippetTranslation
     /**
      * @param string $html
      */
-    public function setHtml($html)
+    public function setHtml(string $html): void
     {
         $this->html = $html;
     }
@@ -80,7 +80,7 @@ class HtmlSnippetTranslation
     /**
      * @param HtmlSnippet $htmlSnippet
      */
-    public function setHtmlSnippet(HtmlSnippet $htmlSnippet)
+    public function setHtmlSnippet(HtmlSnippet $htmlSnippet): void
     {
         $this->htmlSnippet = $htmlSnippet;
     }
@@ -88,7 +88,7 @@ class HtmlSnippetTranslation
     /**
      * @param Locale $locale
      */
-    public function setLocale(Locale $locale)
+    public function setLocale(Locale $locale): void
     {
         $this->locale = $locale;
     }
@@ -96,7 +96,7 @@ class HtmlSnippetTranslation
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -104,15 +104,15 @@ class HtmlSnippetTranslation
     /**
      * @return string
      */
-    public function getHtml()
+    public function getHtml(): string
     {
         return $this->html;
     }
     
     /**
-     * @return Article
+     * @return HtmlSnippet
      */
-    public function getHtmlSnippet()
+    public function getHtmlSnippet(): HtmlSnippet
     {
         return $this->htmlSnippet;
     }
@@ -120,7 +120,7 @@ class HtmlSnippetTranslation
     /**
      * @return Locale
      */
-    public function getLocale()
+    public function getLocale(): Locale
     {
         return $this->locale;
     }

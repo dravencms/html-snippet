@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -6,12 +6,12 @@
 namespace Dravencms\Model\HtmlSnippet\Repository;
 
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
-use Kdyby\Doctrine\EntityManager;
-use Nette;
+use Dravencms\Database\EntityManager;
+
 
 class HtmlSnippetRepository
 {
-    /** @var \Kdyby\Doctrine\EntityRepository */
+    /** @var \Doctrine\Persistence\ObjectRepository|HtmlSnippet */
     private $htmlSnippetRepository;
 
     /** @var EntityManager */
@@ -28,10 +28,10 @@ class HtmlSnippetRepository
     }
 
     /**
-     * @param $id
-     * @return mixed|null|HtmlSnippet
+     * @param int $id
+     * @return null|HtmlSnippet
      */
-    public function getOneById($id)
+    public function getOneById(int $id): ?HtmlSnippet
     {
         return $this->htmlSnippetRepository->find($id);
     }
@@ -59,7 +59,7 @@ class HtmlSnippetRepository
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function isIdentifierFree($identifier, HtmlSnippet $htmlSnippetIgnore = null)
+    public function isIdentifierFree(string $identifier, HtmlSnippet $htmlSnippetIgnore = null): bool
     {
         $qb = $this->htmlSnippetRepository->createQueryBuilder('hs')
             ->select('hs')
@@ -93,7 +93,7 @@ class HtmlSnippetRepository
      * @param $id
      * @return null|HtmlSnippet
      */
-    public function getOneByIdAndActive($id)
+    public function getOneByIdAndActive(int $id): ?HtmlSnippet
     {
         return $this->htmlSnippetRepository->findOneBy(['id' => $id, 'isActive' => true]);
     }
@@ -102,7 +102,7 @@ class HtmlSnippetRepository
      * @param array $parameters
      * @return HtmlSnippet
      */
-    public function getOneByParameters(array $parameters)
+    public function getOneByParameters(array $parameters): ?HtmlSnippet
     {
         return $this->htmlSnippetRepository->findOneBy($parameters);
     }

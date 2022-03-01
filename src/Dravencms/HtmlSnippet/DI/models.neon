@@ -1,6 +1,5 @@
 - Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository
 - Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetTranslationRepository
-- Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetCmsRepository
 
 - Dravencms\Model\HtmlSnippet\Fixtures\AclOperationFixtures
 - Dravencms\Model\HtmlSnippet\Fixtures\AclResourceFixtures

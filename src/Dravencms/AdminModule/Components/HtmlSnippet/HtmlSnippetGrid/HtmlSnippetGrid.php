@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -26,7 +26,8 @@ use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Locale\CurrentLocaleResolver;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
+use Nette\Security\User;
 
 /**
  * Description of HtmlSnippetGrid
@@ -44,6 +45,9 @@ class HtmlSnippetGrid extends BaseControl
 
     /** @var EntityManager */
     private $entityManager;
+    
+    /** @var User */
+    private $user;
 
     /** @var ILocale */
     private $currentLocale;
@@ -53,15 +57,22 @@ class HtmlSnippetGrid extends BaseControl
      */
     public $onDelete = [];
 
+    /**
+     * @param HtmlSnippetRepository $htmlSnippetRepository
+     * @param BaseGridFactory $baseGridFactory
+     * @param EntityManager $entityManager
+     * @param User $user
+     * @param CurrentLocaleResolver $currentLocaleResolver
+     */
     public function __construct(
         HtmlSnippetRepository $htmlSnippetRepository,
         BaseGridFactory $baseGridFactory,
         EntityManager $entityManager,
+        User $user,
         CurrentLocaleResolver $currentLocaleResolver
     )
     {
-        parent::__construct();
-
+        $this->user = $user;
         $this->baseGridFactory = $baseGridFactory;
         $this->htmlSnippetRepository = $htmlSnippetRepository;
         $this->currentLocale = $currentLocaleResolver->getCurrentLocale();
@@ -70,9 +81,9 @@ class HtmlSnippetGrid extends BaseControl
 
     /**
      * @param $name
-     * @return mixed
+     * @return Grid
      */
-    public function createComponentGrid($name)
+    public function createComponentGrid(string $name): Grid
     {
         /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
@@ -94,7 +105,7 @@ class HtmlSnippetGrid extends BaseControl
             ->setSortable()
             ->setFilterDate();
 
-        if ($this->presenter->isAllowed('htmlSnippet', 'edit'))
+        if ($this->user->isAllowed('htmlSnippet', 'edit'))
         {
             $grid->addAction('edit', '')
                 ->setIcon('pencil')
@@ -102,13 +113,13 @@ class HtmlSnippetGrid extends BaseControl
                 ->setClass('btn btn-xs btn-primary');
         }
 
-        if ($this->presenter->isAllowed('htmlSnippet', 'delete'))
+        if ($this->user->isAllowed('htmlSnippet', 'delete'))
         {
             $grid->addAction('delete', '', 'delete!')
                 ->setIcon('trash')
                 ->setTitle('Smazat')
                 ->setClass('btn btn-xs btn-danger ajax')
-                ->setConfirm('Do you really want to delete row %s?', 'identifier');
+                ->setConfirmation(new StringConfirmation('Do you really want to delete row %s?', 'identifier'));
 
             $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }
@@ -125,7 +136,7 @@ class HtmlSnippetGrid extends BaseControl
     /**
      * @param array $ids
      */
-    public function gridGroupActionDelete(array $ids)
+    public function gridGroupActionDelete(array $ids): void
     {
         $this->handleDelete($ids);
     }
@@ -135,7 +146,7 @@ class HtmlSnippetGrid extends BaseControl
      * @throws \Exception
      * @isAllowed(htmlSnippet, delete)
      */
-    public function handleDelete($id)
+    public function handleDelete($id): void
     {
         $htmlSnippets = $this->htmlSnippetRepository->getById($id);
         foreach ($htmlSnippets AS $htmlSnippet)
@@ -148,7 +159,7 @@ class HtmlSnippetGrid extends BaseControl
         $this->onDelete();
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/HtmlSnippetGrid.latte');

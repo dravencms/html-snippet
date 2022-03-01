@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -22,16 +22,14 @@ namespace Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseForm\BaseFormFactory;
-use Dravencms\File\File;
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippetTranslation;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetTranslationRepository;
 use Dravencms\Model\Locale\Repository\LocaleRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Kdyby\Doctrine\EntityManager;
-use Nette\Application\UI\Form;
-use Nette\Utils\Strings;
+use Dravencms\Database\EntityManager;
+use Nette\Security\User;
+use Dravencms\Model\Form\Entities\Form;
 
 /**
  * Description of HtmlSnippetForm
@@ -54,6 +52,9 @@ class HtmlSnippetForm extends BaseControl
 
     /** @var HtmlSnippetTranslationRepository */
     private $htmlSnippetTranslationRepository;
+    
+    /** @var User */
+    private $user;
 
     /** @var HtmlSnippet|null */
     private $htmlSnippet = null;
@@ -64,15 +65,14 @@ class HtmlSnippetForm extends BaseControl
     public function __construct(
         BaseFormFactory $baseFormFactory,
         EntityManager $entityManager,
+        User $user,
         HtmlSnippetRepository $htmlSnippetRepository,
         HtmlSnippetTranslationRepository $htmlSnippetTranslationRepository,
         LocaleRepository $localeRepository,
         HtmlSnippet $htmlSnippet = null
     ) {
-        parent::__construct();
-
         $this->htmlSnippet = $htmlSnippet;
-
+        $this->user = $user;
         $this->baseFormFactory = $baseFormFactory;
         $this->entityManager = $entityManager;
         $this->htmlSnippetRepository = $htmlSnippetRepository;
@@ -101,7 +101,10 @@ class HtmlSnippetForm extends BaseControl
         $this['form']->setDefaults($defaults);
     }
 
-    protected function createComponentForm()
+    /**
+     * @return Form
+     */
+    protected function createComponentForm(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -129,7 +132,7 @@ class HtmlSnippetForm extends BaseControl
         return $form;
     }
 
-    public function editFormValidate(Form $form)
+    public function editFormValidate(Form $form): void
     {
         $values = $form->getValues();
 
@@ -139,12 +142,16 @@ class HtmlSnippetForm extends BaseControl
             }
         }
 
-        if (!$this->presenter->isAllowed('htmlSnippet', 'edit')) {
+        if (!$this->user->isAllowed('htmlSnippet', 'edit')) {
             $form->addError('Nemáte oprávění editovat htmlSnippet.');
         }
     }
 
-    public function editFormSucceeded(Form $form)
+    /**
+     * @param Form $form
+     * @return void
+     */
+    public function editFormSucceeded(Form $form): void
     {
         $values = $form->getValues();
 
@@ -183,7 +190,7 @@ class HtmlSnippetForm extends BaseControl
         $this->onSuccess();
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->activeLocales = $this->localeRepository->getActive();

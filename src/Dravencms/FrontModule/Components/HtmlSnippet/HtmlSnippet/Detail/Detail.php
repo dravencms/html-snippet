@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\FrontModule\Components\HtmlSnippet\HtmlSnippet\Detail;
 
@@ -49,7 +49,6 @@ class Detail extends BaseControl
         Tempnam $tempnam
     )
     {
-        parent::__construct();
         $this->cmsActionOption = $cmsActionOption;
         $this->htmlSnippetRepository = $htmlSnippetRepository;
         $this->htmlSnippetTranslationRepository = $htmlSnippetTranslationRepository;
@@ -58,7 +57,7 @@ class Detail extends BaseControl
         $this->cache = new Cache($storage, __CLASS__);
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $htmlSnippet = $this->htmlSnippetRepository->getOneByIdAndActive($this->cmsActionOption->getParameter('id'));

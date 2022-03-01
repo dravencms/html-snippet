@@ -1,0 +1,6 @@
+extensions:
+    dravencms.htmlSnippet: Dravencms\HtmlSnippet\DI\HtmlSnippetExtension
+
+nettrine.orm.annotations:
+    mapping:
+        Dravencms\Model\HtmlSnippet: %appDir%/../vendor/dravencms/html-snippet/src/Dravencms/Model/HtmlSnippet/Entities

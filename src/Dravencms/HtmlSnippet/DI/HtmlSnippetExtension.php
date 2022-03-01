@@ -1,65 +1,52 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\HtmlSnippet\DI;
 
-use Kdyby\Console\DI\ConsoleExtension;
-use Nette;
-use Nette\DI\Compiler;
-use Nette\DI\Configurator;
+use Dravencms\HtmlSnippet\HtmlSnippet;
+use Nette\DI\CompilerExtension;
 use Salamek\Cms\DI\CmsExtension;
 /**
  * Class HtmlSnippetExtension
  * @package Dravencms\HtmlSnippet\DI
  */
-class HtmlSnippetExtension extends Nette\DI\CompilerExtension
+class HtmlSnippetExtension extends CompilerExtension
 {
-
-    public function loadConfiguration()
+    public function loadConfiguration(): void
     {
-        $config = $this->getConfig();
         $builder = $this->getContainerBuilder();
 
+        $builder->addDefinition($this->prefix('form'))
+            ->setFactory(HtmlSnippet::class);
 
-        $builder->addDefinition($this->prefix('htmlSnippet'))
-            ->setClass('Dravencms\HtmlSnippet\HtmlSnippet', []);
+        if (class_exists(CmsExtension::class)) {
+            $this->loadCmsComponents();
+            $this->loadCmsModels();
+        }
 
-        $this->loadCmsComponents();
         $this->loadComponents();
         $this->loadModels();
         $this->loadConsole();
     }
-
-
-    /**
-     * @param Configurator $config
-     * @param string $extensionName
-     */
-    public static function register(Configurator $config, $extensionName = 'htmlSnippetExtension')
+    
+    protected function loadCmsModels(): void
     {
-        $config->onCompile[] = function (Configurator $config, Compiler $compiler) use ($extensionName) {
-            $compiler->addExtension($extensionName, new HtmlSnippetExtension());
-        };
+        $builder = $this->getContainerBuilder();
+        foreach ($this->loadFromFile(__DIR__ . '/cmsModels.neon') as $i => $command) {
+            $cli = $builder->addDefinition($this->prefix('cmsModels.' . $i));
+            if (is_string($command)) {
+                $cli->setFactory($command);
+            } else {
+                throw new \InvalidArgumentException;
+            }
+        }
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfig(array $defaults = [], $expand = true)
-    {
-        $defaults = [
-        ];
-
-        return parent::getConfig($defaults, $expand);
-    }
-
-    protected function loadCmsComponents()
+    protected function loadCmsComponents(): void
     {
         $builder = $this->getContainerBuilder();
         foreach ($this->loadFromFile(__DIR__ . '/cmsComponents.neon') as $i => $command) {
-            $cli = $builder->addDefinition($this->prefix('cmsComponent.' . $i))
-                ->addTag(CmsExtension::TAG_COMPONENT)
-                ->setInject(FALSE); // lazy injects
+            $cli = $builder->addFactoryDefinition($this->prefix('cmsComponent.' . $i))
+                ->addTag(CmsExtension::TAG_COMPONENT);
             if (is_string($command)) {
                 $cli->setImplement($command);
             } else {
@@ -68,12 +55,11 @@ class HtmlSnippetExtension extends Nette\DI\CompilerExtension
         }
     }
 
-    protected function loadComponents()
+    protected function loadComponents(): void
     {
         $builder = $this->getContainerBuilder();
         foreach ($this->loadFromFile(__DIR__ . '/components.neon') as $i => $command) {
-            $cli = $builder->addDefinition($this->prefix('components.' . $i))
-                ->setInject(FALSE); // lazy injects
+            $cli = $builder->addFactoryDefinition($this->prefix('components.' . $i));
             if (is_string($command)) {
                 $cli->setImplement($command);
             } else {
@@ -82,32 +68,29 @@ class HtmlSnippetExtension extends Nette\DI\CompilerExtension
         }
     }
 
-    protected function loadModels()
+    protected function loadModels(): void
     {
         $builder = $this->getContainerBuilder();
         foreach ($this->loadFromFile(__DIR__ . '/models.neon') as $i => $command) {
-            $cli = $builder->addDefinition($this->prefix('models.' . $i))
-                ->setInject(FALSE); // lazy injects
+            $cli = $builder->addDefinition($this->prefix('models.' . $i));
             if (is_string($command)) {
-                $cli->setClass($command);
+                $cli->setFactory($command);
             } else {
                 throw new \InvalidArgumentException;
             }
         }
     }
 
-    protected function loadConsole()
+    protected function loadConsole(): void
     {
         $builder = $this->getContainerBuilder();
 
         foreach ($this->loadFromFile(__DIR__ . '/console.neon') as $i => $command) {
             $cli = $builder->addDefinition($this->prefix('cli.' . $i))
-                ->addTag(ConsoleExtension::TAG_COMMAND)
-                ->setInject(FALSE); // lazy injects
+                ->setAutowired(false);
 
             if (is_string($command)) {
-                $cli->setClass($command);
-
+                $cli->setFactory($command);
             } else {
                 throw new \InvalidArgumentException;
             }

@@ -18,6 +18,9 @@
     "dravencms/structure": "^1.0",
     "dravencms/tempnam": "^1.0"
   },
+  "suggest": {
+    "dravencms/structure": "Allows html snippet components to be used in cms"
+  },
   "require-dev": {
     "nette/tester": "@dev"
   },
@@ -28,16 +31,7 @@
   },
   "extra": {
     "dravencms": {
-      "configuration": {
-        "extensions": {
-          "htmlSnippet": "Dravencms\\HtmlSnippet\\DI\\HtmlSnippetExtension"
-        },
-        "doctrine":{
-          "metadata": {
-            "Dravencms\\Model\\HtmlSnippet": "%appDir%/../vendor/dravencms/html-snippet/src/Dravencms/Model/HtmlSnippet"
-          }
-        }
-      }
+      "configuration": "dravencms.config.neon"
     }
   }
 }

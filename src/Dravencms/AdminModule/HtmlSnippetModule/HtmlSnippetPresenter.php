@@ -1,9 +1,11 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\AdminModule\HtmlSnippetModule;
 
 use Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetForm\HtmlSnippetFormFactory;
+use Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetForm\HtmlSnippetForm;
 use Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetGrid\HtmlSnippetGridFactory;
+use Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetGrid\HtmlSnippetGrid;
 use Dravencms\AdminModule\SecuredPresenter;
 use Dravencms\Flash;
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
@@ -32,7 +34,7 @@ class HtmlSnippetPresenter extends SecuredPresenter
     /**
      * @isAllowed(htmlSnippet,edit)
      */
-    public function actionDefault()
+    public function actionDefault(): void
     {
         $this->template->h1 = 'Html snippets';
     }
@@ -41,7 +43,7 @@ class HtmlSnippetPresenter extends SecuredPresenter
      * @isAllowed(htmlSnippet,edit)
      * @param $id
      */
-    public function actionEdit($id = null)
+    public function actionEdit(int $id = null): void
     {
         if ($id) {
             $htmlSnippet = $this->htmlSnippetRepository->getOneById($id);
@@ -59,9 +61,9 @@ class HtmlSnippetPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetForm\HtmlSnippetForm
+     * @return HtmlSnippetForm
      */
-    protected function createComponentHtmlSnippetForm()
+    protected function createComponentHtmlSnippetForm(): HtmlSnippetForm
     {
         $control = $this->htmlSnippetFormFactory->create($this->htmlSnippet);
         $control->onSuccess[] = function(){
@@ -72,9 +74,9 @@ class HtmlSnippetPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \Dravencms\AdminModule\Components\HtmlSnippet\HtmlSnippetGrid\HtmlSnippetGrid
+     * @return HtmlSnippetGrid
      */
-    public function createComponentHtmlSnippetGrid()
+    public function createComponentHtmlSnippetGrid(): HtmlSnippetGrid
     {
         $control = $this->htmlSnippetGridFactory->create();
         $control->onDelete[] = function()

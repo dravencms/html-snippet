@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -28,5 +28,5 @@ interface HtmlSnippetFormFactory
      * @param HtmlSnippet|null $htmlSnippet
      * @return HtmlSnippetForm
      */
-    public function create(HtmlSnippet $htmlSnippet = null);
+    public function create(HtmlSnippet $htmlSnippet = null): HtmlSnippetForm;
 }
