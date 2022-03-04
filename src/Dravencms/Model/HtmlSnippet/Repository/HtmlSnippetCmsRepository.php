@@ -6,9 +6,9 @@
 namespace Dravencms\Model\HtmlSnippet\Repository;
 
 use Dravencms\Model\HtmlSnippet\Entities\HtmlSnippet;
-use Salamek\Cms\CmsActionOption;
-use Salamek\Cms\ICmsActionOption;
-use Salamek\Cms\ICmsComponentRepository;
+use Dravencms\Structure\CmsActionOption;
+use Dravencms\Structure\ICmsActionOption;
+use Dravencms\Structure\ICmsComponentRepository;
 
 
 class HtmlSnippetCmsRepository implements ICmsComponentRepository

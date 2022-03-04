@@ -8,7 +8,7 @@ use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetRepository;
 use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetTranslationRepository;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use Salamek\Cms\ICmsActionOption;
+use Dravencms\Structure\ICmsActionOption;
 use Salamek\Tempnam\Tempnam;
 
 class Detail extends BaseControl
