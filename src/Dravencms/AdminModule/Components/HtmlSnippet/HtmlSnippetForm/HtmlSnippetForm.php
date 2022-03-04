@@ -29,7 +29,7 @@ use Dravencms\Model\HtmlSnippet\Repository\HtmlSnippetTranslationRepository;
 use Dravencms\Model\Locale\Repository\LocaleRepository;
 use Dravencms\Database\EntityManager;
 use Nette\Security\User;
-use Dravencms\Model\Form\Entities\Form;
+use Dravencms\Components\BaseForm\Form;
 
 /**
  * Description of HtmlSnippetForm
